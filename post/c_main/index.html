@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="">
+    <meta property="og:url" content="http://rancl.github.io/post/c_main/">
+
+    <title> - chunlei.ran Hugo Site</title>
+    <meta property="og:title" content=" - chunlei.ran Hugo Site">
+    <meta property="og:type" content="article">
+    <meta name="description" content="">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Arvo:400,700">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/journal.css">
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="chunlei.ran Hugo Site">
+
+  </head>
+
+  <body>
+    <div class="container">
+
+      <nav class="site-nav">
+        <a href="http://rancl.github.io/">Index</a>
+      </nav>
+
+
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"></h1>
+      <time class="post-date" datetime="0001-01-01 00:00:00 UTC">01 Jan 0001</time>
+    </header>
+
+    
+
+<h1 id="c语言为什么要有-main-函数-具体作用是什么:cdf003b0fa22aaabecc4a8328459262f">C语言为什么要有 main 函数？具体作用是什么？</h1>
+
+<p><dt>我尝试从另一角度解释“为什么”要这么设计 </dt>
+<dt>大多数脚本语言不需要标明程序开始执行的位置,例如Python、shell只需把程序语句直接写在源文件中，然后执行该文件。</dt>
+<dt>而C与许多编译式语言分开了3个阶段：编译、链接、运行。每个编辑单元（例如多个.c源文件）是各自独立编译成目标文件（例如.o），最后由链接器把这些目标文件链接成可执行程序。</dt>
+<dt>c利用不能重复定义函数的机制，链接时有超过1个main()函数被定义就报错。使用main()函数这种设计简单解决了链接时应用程序入口执行的问题.</dt>
+<dt>main函数就是这个约定好的用户代码默认入口。当然，只要你愿意，改成啥都行。比如你改成nomain，那么编译链接时就要指定入口了（同时指定不链接CRT的入口代码</dt></p>
+
+<blockquote>
+<p>/*  c_nomain.c  */<br />
+#include <stdio.h><br />
+#include <stdlib.h><br />
+#include <string.h></p>
+
+<p>int main(void);
+int main(void)<br />
+{</p>
+
+<pre><code>printf(&quot;main start\n&quot;);
+printf(&quot;main end\n&quot;);
+return 0;
+</code></pre>
+
+<p>}</p>
+
+<p>int nomain()<br />
+{<br />
+   printf(&ldquo;nomain start\n&rdquo;);</p>
+
+<p>main();<br />
+   printf(&ldquo;nomain end\n&rdquo;);<br />
+   exit(0);<br />
+}</p>
+
+<pre><code>编译
+gcc c_nomain.c -o c_nomain -e nomain
+</code></pre>
+
+<p><dt><br />
+你写的代码编译后要使用链接器进行链接，总得告诉链接器你的代码从哪里开始执行吧。
+-e 代表应用程序用户接口入口点<br />
+nomain 代表程序的入口函数名称
+</dt></p>
+
+<p>这个函数地址并不是一个可执行文件的真正的入口地址，通常入口地址在C Runtime里，由C Runtime调用main函数，而这个被调用的函数可以在链接的时候指定，不必须是main，C Runtime在这里的作用是做一些C语言的环境准备工作</p>
+</blockquote>
+
+
+  </article>
+
+
+      <footer class="site-footer">
+        <span itemscope itemtype="http://schema.org/Person">
+          <link itemprop="url" href="http://rancl.github.io/">
+          <span itemprop="name"></span>
+
+          <br>
+
+          
+
+          
+
+          
+        </span>
+
+        
+      </footer>
+    </div>
+
+  <script src="/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  </body>
+</html>
+

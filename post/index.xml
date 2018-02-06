@@ -85,5 +85,62 @@ C99中,非空类型函数必须使用带返回值的return语句.&lt;/p&gt;&lt;/
 </description>
     </item>
     
+    <item>
+      <title></title>
+      <link>http://rancl.github.io/post/c_main/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://rancl.github.io/post/c_main/</guid>
+      <description>
+
+&lt;h1 id=&#34;c语言为什么要有-main-函数-具体作用是什么:cdf003b0fa22aaabecc4a8328459262f&#34;&gt;C语言为什么要有 main 函数？具体作用是什么？&lt;/h1&gt;
+
+&lt;p&gt;&lt;dt&gt;我尝试从另一角度解释“为什么”要这么设计 &lt;/dt&gt;
+&lt;dt&gt;大多数脚本语言不需要标明程序开始执行的位置,例如Python、shell只需把程序语句直接写在源文件中，然后执行该文件。&lt;/dt&gt;
+&lt;dt&gt;而C与许多编译式语言分开了3个阶段：编译、链接、运行。每个编辑单元（例如多个.c源文件）是各自独立编译成目标文件（例如.o），最后由链接器把这些目标文件链接成可执行程序。&lt;/dt&gt;
+&lt;dt&gt;c利用不能重复定义函数的机制，链接时有超过1个main()函数被定义就报错。使用main()函数这种设计简单解决了链接时应用程序入口执行的问题.&lt;/dt&gt;
+&lt;dt&gt;main函数就是这个约定好的用户代码默认入口。当然，只要你愿意，改成啥都行。比如你改成nomain，那么编译链接时就要指定入口了（同时指定不链接CRT的入口代码&lt;/dt&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;/*  c_nomain.c  */&lt;br /&gt;
+#include &lt;stdio.h&gt;&lt;br /&gt;
+#include &lt;stdlib.h&gt;&lt;br /&gt;
+#include &lt;string.h&gt;&lt;/p&gt;
+
+&lt;p&gt;int main(void);
+int main(void)&lt;br /&gt;
+{&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;printf(&amp;quot;main start\n&amp;quot;);
+printf(&amp;quot;main end\n&amp;quot;);
+return 0;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}&lt;/p&gt;
+
+&lt;p&gt;int nomain()&lt;br /&gt;
+{&lt;br /&gt;
+   printf(&amp;ldquo;nomain start\n&amp;rdquo;);&lt;/p&gt;
+
+&lt;p&gt;main();&lt;br /&gt;
+   printf(&amp;ldquo;nomain end\n&amp;rdquo;);&lt;br /&gt;
+   exit(0);&lt;br /&gt;
+}&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;编译
+gcc c_nomain.c -o c_nomain -e nomain
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;dt&gt;&lt;br /&gt;
+你写的代码编译后要使用链接器进行链接，总得告诉链接器你的代码从哪里开始执行吧。
+-e 代表应用程序用户接口入口点&lt;br /&gt;
+nomain 代表程序的入口函数名称
+&lt;/dt&gt;&lt;/p&gt;
+
+&lt;p&gt;这个函数地址并不是一个可执行文件的真正的入口地址，通常入口地址在C Runtime里，由C Runtime调用main函数，而这个被调用的函数可以在链接的时候指定，不必须是main，C Runtime在这里的作用是做一些C语言的环境准备工作&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
