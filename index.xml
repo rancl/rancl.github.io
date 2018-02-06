@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>chunlei.ran Hugo Site</title>
+    <link>http://rancl.github.io/</link>
+    <description>Recent content on chunlei.ran Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 28 Jan 2018 17:28:11 +0800</lastBuildDate>
+    <atom:link href="http://rancl.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>浅谈c89 和 c99 比较</title>
+      <link>http://rancl.github.io/post/c89_c99_different/</link>
+      <pubDate>Sun, 28 Jan 2018 17:28:11 +0800</pubDate>
+      
+      <guid>http://rancl.github.io/post/c89_c99_different/</guid>
+      <description>
+
+&lt;h1 id=&#34;浅谈c89-和-c99-标准比较:c60a02b1736bd7fd8db17f27219d9492&#34;&gt;浅谈C89 和 C99 标准比较&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;注1： GCC支持C99, 通过 --std=c99 命令行参数开启，如：
+代码:
+gcc --std=c99 test.c 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;增加restrict指针&lt;br /&gt;
+C99中增加了公适用于指针的restrict类型修饰符，它是初始访问指针所指对象的惟一途径，因此只有借助restrict指针表达式才能访问对象。restrict指针指针主要用做函数变元，或者指向由malloc()函数所分配的内存变量。restrict数据类型不改变程序的语义。如果某个函数定义了两个restrict指针变元，编译程序就假定它们指向两个不同的对象，memcpy()
+函数就是restrict指针的一个典型应用示例。&lt;br /&gt;
+&lt;code&gt;
+C89中memcpy()函数原型如下：
+代码:
+　　void *memcpy (void *s1, const void *s2, size_t size);　　
+如果s1和s2所指向的对象重叠，其操作就是未定义的。memcpy()函数只能用于不重叠的对象。
+&lt;/code&gt;
+&lt;code&gt;
+C99中memcpy()函数原型如下：
+代码:
+　　void *memcpy(void *restrict s1, const void *restrict s2,size_t size);　　
+通过使用restrict修饰s1和s2变元，可确保它们在该原型中指向不同的对象。
+&lt;/code&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;inline（内联）关键字&lt;br /&gt;
+　　内联函数能使程序员写出高效率的代码.函数的每次调用与返回都会消耗相当大的系统资源,尤其是当函数调用发生在重复次数很多的循环语句中时.一般情况下,当发生一次函数调用时,变元需要进栈,各种寄存器内存需要保存.当函数返回时,寄存器的内容需要恢复。如果该函数在代码内进行联机扩展，当代码执行时，这些保存和恢复操作旅游活动会再发生，而且函数调用的执行速度也会大大加快。函数的联机扩展会产生较长的代码，所以只应该内联对应用程序性能有显著影响的函数以及长度较短的函数。&lt;br /&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;新增数据类型　&lt;br /&gt;
+&lt;dt&gt;_Bool, 值是0或1&lt;/dt&gt;&lt;br /&gt;
+C99中增加了用来定义bool、true以及false宏的头文件夹&lt;stdbool.h&gt;，以便程序
+员能够编写同时兼容于C与C++的应用程序。在编写新的应用程序时，应该使用
+&lt;stdbool.h&gt;头文件中的bool宏。
+　　long long int
+　　C99标准中引进了long long int（-(2e63 - 1)至2e63 - 1）和unsigned long long int（0 - 2e64 - 1）。
+long long int能够支持的整数长度为64位。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;对数组的增强&lt;br /&gt;
+　　可变长数组&lt;br /&gt;
+　　C99中,程序员声明数组时,数组的维数可以由任一有效的整型表达式确定,包括只在运行时才能确定其值的表达式,这类数组就叫做可变长数组,但是只有局部数组才可以是变长的.可变长数组的维数在数组生存期内是不变的,也就是说,可变长数组不是动态的.可以变化的只是数组的大小.可以使用*来定义不确定长的可变长数组。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;预处理程序的修改&lt;br /&gt;
+5.1 变元列表&lt;br /&gt;
+宏可以带变元，在宏定义中用省略号（&amp;hellip;）表示。内部预处理标识符&lt;strong&gt;VA_ARGS&lt;/strong&gt;决定变元将在何处得到替换。例：#define MySum(&amp;hellip;) sum(&lt;strong&gt;VA_ARGS&lt;/strong&gt;) 语句MySum(k,m,n);将被转换成：sum(k, m, n);
+变元还可以包含变元。例： #define compare(compf, &amp;hellip;) compf(&lt;strong&gt;VA_ARGS&lt;/strong&gt;) 其中的compare(strcmp,&amp;ldquo;small&amp;rdquo;, &amp;ldquo;large&amp;rdquo;); 将替换成：strcmp(&amp;ldquo;small&amp;rdquo;,&amp;ldquo;large&amp;rdquo;);&lt;br /&gt;
+5.2 内部编译指令
+STDC FP_CONTRACT ON/OFF/DEFAULT:若为ON，浮点表达式被当做基于硬件方式处理的独立单元。默认值是定义的工具。&lt;br /&gt;
+STDC FEVN_ACCESS ON/OFF/DEFAULT:告诉编译程序可以访问浮点环境。默认值是定义的工具。&lt;br /&gt;
+STDC CX_LIMITED_RANGE ON/OFF/DEFAULT:若值为ON，相当于告诉编译程序某程序某些含有复数的公式是可靠的。默认是OFF。&lt;br /&gt;
+5.3 新增的内部宏&lt;br /&gt;
+&lt;strong&gt;STDC_HOSTED&lt;/strong&gt;                   若操作系统存在，则为1&lt;br /&gt;
+&lt;strong&gt;STDC_VERSION&lt;/strong&gt;                  199991L或更高。代表C的版本&lt;br /&gt;
+&lt;strong&gt;STDC_IEC_599&lt;/strong&gt;                  若支持IEC 60559浮点运算，则为1&lt;br /&gt;
+&lt;strong&gt;STDC_IEC_599_COMPLEX&lt;/strong&gt;          若支持IEC 60599复数运算，则为1(这项和上面这项,我试过,编译没通过,使用c99,不知道有编译通过的朋友吗)&lt;br /&gt;
+&lt;strong&gt;STDC_ISO_10646&lt;/strong&gt;                由编译程序支持，用于说明ISO/IEC 10646标准的年和月格式：yyymmmL&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;指定的初始化符&lt;br /&gt;
+C99中，该特性对经常使用稀疏数组的程序员十分有用。指定的初始化符通常有两种用法：用于数组，以及用于结构和联合。用于数组的格式：[index] = vol;  其中，index表示数组的下标，vol表示本数组元素的初始化值。&lt;br /&gt;
+例如： int x[10] = {[0] = 10, [5] = 30};&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;func&lt;/strong&gt;预定义标识符
+用于指出&lt;strong&gt;func&lt;/strong&gt;所存放的函数名，类似于字符串赋值。
+不再支持隐含式的int规则
+删除了隐含式函数声明
+对返回值的约束
+C99中,非空类型函数必须使用带返回值的return语句.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
