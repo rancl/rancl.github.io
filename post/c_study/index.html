@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="">
+    <meta property="og:url" content="http://rancl.github.io/post/c_study/">
+
+    <title>c增强学习笔记 - chunlei.ran Hugo Site</title>
+    <meta property="og:title" content="c增强学习笔记 - chunlei.ran Hugo Site">
+    <meta property="og:type" content="article">
+    <meta name="description" content="">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Arvo:400,700">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/journal.css">
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="chunlei.ran Hugo Site">
+
+  </head>
+
+  <body>
+    <div class="container">
+
+      <nav class="site-nav">
+        <a href="http://rancl.github.io/">Index</a>
+      </nav>
+
+
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">c增强学习笔记</h1>
+      <time class="post-date" datetime="2018-01-28 17:28:11 CST">28 Jan 2018</time>
+    </header>
+
+    
+
+<h1 id="c增强学习笔记:060411c3bfd51f03929f35f279b3303d">C增强学习笔记</h1>
+
+<h2 id="一-词法缺陷:060411c3bfd51f03929f35f279b3303d">一.词法缺陷</h2>
+
+<p>1 .词法分析中的贪心算法：每个符号应该包括尽可能多的字符。因此，注释的嵌套是不允许的。</p>
+
+<h2 id="二-语法:060411c3bfd51f03929f35f279b3303d">二.语法</h2>
+
+<ol>
+<li>int (*fp)()中的fp是一个函数指针，指向返回为int的类型的函数。原因在于（）的优先级高于*；而 int *fp()中的fp是一个返回类型为指针的函数；</li>
+<li>(void)(*)()的含义： (void)(<em>fp)()中，fp是一个指向返回类型为void的函数的指针，去掉fp后，(void)(</em>)()指的是这种指针的类型。</li>
+<li>理解 (<em>(void)(</em>)())0() 的含义：首先利用void)(*)()对0进行强制转换，使“0”称为指针类型，然后使用“*”解引用，其实质为(*cast(0) ) ()，还是对函数指针的一个使用；</li>
+
+<li><p>运算符的优先级中，最重要的两点：a，总则：0目（数组下标，函数调用，结构成员选择）  &gt; 单目 &gt; 双目（算术，移位，关系依次递减） &gt; 三目 &gt; 赋值；b，任何一个逻辑运算符的优先级低于任何一个关系运算符；b，移位运算符的优先级比算术运算符低，但是比关系运算符高。</p>
+
+<h2 id="三-语义:060411c3bfd51f03929f35f279b3303d">三.语义</h2></li>
+
+<li><p>数组和指针：在讲数组作为函数的参数传递的时候，数组会自动被转化为指针的形式。</p></li>
+
+<li><p>在C语言中将一个整数转换为一个指针，最后得到的结果取决于具体的C编译器的实现。</p></li>
+
+<li><p>通常，#define NULL 0；当常数0被转换为指针使用的时候，这个指针绝对不能被解引用（dereference）。换句话说，当我们将0赋值给一个指针变量，绝对不能企图使用该指针所指向的内存中存储的内容。</p></li>
+
+<li><p>整数溢出：若a和b为非负整数，检查a+b是否会溢出？ a+b &lt; 0 是不能正确执行的。如某些机器上，数据运算的结果为正/负/零/溢出四种，则a+b时，内部寄存器会出现溢出而不是负，则if检查失败。正确方式是将a和b都转换成无符号整数。if((unsigned)a + (unsigned) b &gt; INT_MAX)，其中INT_MAX在<limits.h>中所定义。或者  if(a &gt; INT_MAX -b)</p>
+
+<h2 id="四-链接:060411c3bfd51f03929f35f279b3303d">四.链接</h2></li>
+
+<li><p>链接器的作用：输入一组目标模块和库文件，输出一个载入模块。其主要作用是解决命名冲突。</p></li>
+
+<li><p>static修饰符作用有二：其一是声明变量或者函数是静态的；其二是被static修饰的变量或者函数只能在改源文件内引用。换句话说，如果一个函数仅仅被同一个源文件的其他函数调用，就应该声明该函数为static。这样可以避免与标准库文件中的外部对象名称发生冲突。</p></li>
+
+<li><p>如果一个未标明的标识符后面跟一个开括号，那么它将被视为一个返回整型的函数。</p></li>
+
+<li><p>每个外部对象只在一个地方声明。这个声明的地方一般就在一个头文件中，需要用到该外部对象的所有模块都应该包括这个头文件。特别需要指出的是定义该外部对象的模块也应该包括这个头文件。</p></li>
+
+<li><p>Endian的意思是“数据在内存中的字节排列顺序”， 表示一个字在内存中或传送过程中的字节顺序。(Little endian 将低序字节存储在起始地址, Big endian 则相反)</p>
+
+<h2 id="五-移植性:060411c3bfd51f03929f35f279b3303d">五.移植性</h2></li>
+
+<li><p>字符是有符号整数还是无符号
+错误认识：(unsigned)c，其在将字符c转化为无符号整数时，c将首先被转化为int型整数,可能会达到非预期的结果
+正确的使用: (unsigned char)c</p></li>
+
+<li><p>移位运算
+空位用什么填充？</p></li>
+
+<li><p>大小写转化<br />
+&gt;#define toupper&copy; (&copy;+&lsquo;A&rsquo;-&lsquo;a&rsquo;) 和 #define tolower&copy; (&copy;+&lsquo;a&rsquo;-&lsquo;A&rsquo;)</p>
+
+<h2 id="六-预处理:060411c3bfd51f03929f35f279b3303d">六.预处理</h2></li>
+
+<li><p>宏定义
+宏不是类型定义
+宏不是语句</p></li>
+</ol>
+
+<h2 id="七-位域:060411c3bfd51f03929f35f279b3303d">七.位域</h2>
+
+<pre><code>typedef unsigned       char  u8; 
+
+typedef union {
+    u8 dat;
+    struct 
+    {   
+        u8 bit0:1;  //data bit 0  (小端处理器这里是0bit,大端时是7bit)
+        u8 bit1:1;  //data bit 1
+        u8 bit2:1;  //data bit 2
+        u8 bit3:1;  //data bit 3
+        u8 bit4:1;  //data bit 4
+        u8 bit5:1;  //data bit 5
+        u8 bit6:1;  //data bit 6
+        u8 bit7:1;  //data bit 7
+    } bit8;
+} bit8_t;          //bit Operation
+
+使用, 
+bit8_t bit8 = 0x22;    
+则 bit8.bit8.bit1的值是1;
+
+</code></pre>
+
+<h2 id="八-结构体:060411c3bfd51f03929f35f279b3303d">八.结构体</h2>
+
+<ol>
+<li>对齐方式：</li>
+<li>语法</li>
+<li>作用</li>
+</ol>
+
+
+  </article>
+
+
+      <footer class="site-footer">
+        <span itemscope itemtype="http://schema.org/Person">
+          <link itemprop="url" href="http://rancl.github.io/">
+          <span itemprop="name"></span>
+
+          <br>
+
+          
+
+          
+
+          
+        </span>
+
+        
+      </footer>
+    </div>
+
+  <script src="/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  </body>
+</html>
+

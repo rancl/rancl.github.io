@@ -67,6 +67,105 @@ nomain 代表程序的入口函数名称
     </item>
     
     <item>
+      <title>c增强学习笔记</title>
+      <link>http://rancl.github.io/post/c_study/</link>
+      <pubDate>Sun, 28 Jan 2018 17:28:11 +0800</pubDate>
+      
+      <guid>http://rancl.github.io/post/c_study/</guid>
+      <description>
+
+&lt;h1 id=&#34;c增强学习笔记:060411c3bfd51f03929f35f279b3303d&#34;&gt;C增强学习笔记&lt;/h1&gt;
+
+&lt;h2 id=&#34;一-词法缺陷:060411c3bfd51f03929f35f279b3303d&#34;&gt;一.词法缺陷&lt;/h2&gt;
+
+&lt;p&gt;1 .词法分析中的贪心算法：每个符号应该包括尽可能多的字符。因此，注释的嵌套是不允许的。&lt;/p&gt;
+
+&lt;h2 id=&#34;二-语法:060411c3bfd51f03929f35f279b3303d&#34;&gt;二.语法&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;int (*fp)()中的fp是一个函数指针，指向返回为int的类型的函数。原因在于（）的优先级高于*；而 int *fp()中的fp是一个返回类型为指针的函数；&lt;/li&gt;
+&lt;li&gt;(void)(*)()的含义： (void)(&lt;em&gt;fp)()中，fp是一个指向返回类型为void的函数的指针，去掉fp后，(void)(&lt;/em&gt;)()指的是这种指针的类型。&lt;/li&gt;
+&lt;li&gt;理解 (&lt;em&gt;(void)(&lt;/em&gt;)())0() 的含义：首先利用void)(*)()对0进行强制转换，使“0”称为指针类型，然后使用“*”解引用，其实质为(*cast(0) ) ()，还是对函数指针的一个使用；&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;运算符的优先级中，最重要的两点：a，总则：0目（数组下标，函数调用，结构成员选择）  &amp;gt; 单目 &amp;gt; 双目（算术，移位，关系依次递减） &amp;gt; 三目 &amp;gt; 赋值；b，任何一个逻辑运算符的优先级低于任何一个关系运算符；b，移位运算符的优先级比算术运算符低，但是比关系运算符高。&lt;/p&gt;
+
+&lt;h2 id=&#34;三-语义:060411c3bfd51f03929f35f279b3303d&#34;&gt;三.语义&lt;/h2&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;数组和指针：在讲数组作为函数的参数传递的时候，数组会自动被转化为指针的形式。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在C语言中将一个整数转换为一个指针，最后得到的结果取决于具体的C编译器的实现。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;通常，#define NULL 0；当常数0被转换为指针使用的时候，这个指针绝对不能被解引用（dereference）。换句话说，当我们将0赋值给一个指针变量，绝对不能企图使用该指针所指向的内存中存储的内容。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;整数溢出：若a和b为非负整数，检查a+b是否会溢出？ a+b &amp;lt; 0 是不能正确执行的。如某些机器上，数据运算的结果为正/负/零/溢出四种，则a+b时，内部寄存器会出现溢出而不是负，则if检查失败。正确方式是将a和b都转换成无符号整数。if((unsigned)a + (unsigned) b &amp;gt; INT_MAX)，其中INT_MAX在&lt;limits.h&gt;中所定义。或者  if(a &amp;gt; INT_MAX -b)&lt;/p&gt;
+
+&lt;h2 id=&#34;四-链接:060411c3bfd51f03929f35f279b3303d&#34;&gt;四.链接&lt;/h2&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;链接器的作用：输入一组目标模块和库文件，输出一个载入模块。其主要作用是解决命名冲突。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;static修饰符作用有二：其一是声明变量或者函数是静态的；其二是被static修饰的变量或者函数只能在改源文件内引用。换句话说，如果一个函数仅仅被同一个源文件的其他函数调用，就应该声明该函数为static。这样可以避免与标准库文件中的外部对象名称发生冲突。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;如果一个未标明的标识符后面跟一个开括号，那么它将被视为一个返回整型的函数。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;每个外部对象只在一个地方声明。这个声明的地方一般就在一个头文件中，需要用到该外部对象的所有模块都应该包括这个头文件。特别需要指出的是定义该外部对象的模块也应该包括这个头文件。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Endian的意思是“数据在内存中的字节排列顺序”， 表示一个字在内存中或传送过程中的字节顺序。(Little endian 将低序字节存储在起始地址, Big endian 则相反)&lt;/p&gt;
+
+&lt;h2 id=&#34;五-移植性:060411c3bfd51f03929f35f279b3303d&#34;&gt;五.移植性&lt;/h2&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;字符是有符号整数还是无符号
+错误认识：(unsigned)c，其在将字符c转化为无符号整数时，c将首先被转化为int型整数,可能会达到非预期的结果
+正确的使用: (unsigned char)c&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;移位运算
+空位用什么填充？&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;大小写转化&lt;br /&gt;
+&amp;gt;#define toupper&amp;copy; (&amp;copy;+&amp;lsquo;A&amp;rsquo;-&amp;lsquo;a&amp;rsquo;) 和 #define tolower&amp;copy; (&amp;copy;+&amp;lsquo;a&amp;rsquo;-&amp;lsquo;A&amp;rsquo;)&lt;/p&gt;
+
+&lt;h2 id=&#34;六-预处理:060411c3bfd51f03929f35f279b3303d&#34;&gt;六.预处理&lt;/h2&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;宏定义
+宏不是类型定义
+宏不是语句&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;七-位域:060411c3bfd51f03929f35f279b3303d&#34;&gt;七.位域&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;typedef unsigned       char  u8; 
+
+typedef union {
+    u8 dat;
+    struct 
+    {   
+        u8 bit0:1;  //data bit 0  (小端处理器这里是0bit,大端时是7bit)
+        u8 bit1:1;  //data bit 1
+        u8 bit2:1;  //data bit 2
+        u8 bit3:1;  //data bit 3
+        u8 bit4:1;  //data bit 4
+        u8 bit5:1;  //data bit 5
+        u8 bit6:1;  //data bit 6
+        u8 bit7:1;  //data bit 7
+    } bit8;
+} bit8_t;          //bit Operation
+
+使用, 
+bit8_t bit8 = 0x22;    
+则 bit8.bit8.bit1的值是1;
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;八-结构体:060411c3bfd51f03929f35f279b3303d&#34;&gt;八.结构体&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;对齐方式：&lt;/li&gt;
+&lt;li&gt;语法&lt;/li&gt;
+&lt;li&gt;作用&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
       <title>浅谈c89 和 c99 比较</title>
       <link>http://rancl.github.io/post/c89_c99_different/</link>
       <pubDate>Sun, 28 Jan 2018 17:28:11 +0800</pubDate>
